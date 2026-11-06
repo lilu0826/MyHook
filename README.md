@@ -6,7 +6,7 @@
 
 ## 安装
 
-1. 按下方说明编译，安装生成的 `dist/MyHook-0.2.0.apk`，可覆盖安装此前同签名的 MyHook。这是独立模块，不需要覆盖安装丰巢。仓库不提交 APK 和签名密钥。
+1. 从 [Releases](https://github.com/lilu0826/MyHook/releases) 下载 APK，或按下方说明编译生成 `dist/MyHook-0.2.0.apk`。可覆盖安装此前同签名的 MyHook。这是独立模块，不需要覆盖安装丰巢。源码仓库不提交 APK 和签名密钥。
 2. 在 LSPosed 中启用 **MyHook**，确认作用域为 **丰巢 / com.fcbox.hiveconsumer**。
 3. 强行停止丰巢，再从桌面图标重新打开。若框架提示重启，按提示操作。
 4. 模块没有桌面入口和设置页，在 LSPosed 的模块列表里管理。
@@ -58,6 +58,12 @@ Windows 安装 JDK 17 并设置 `JAVA_HOME` 后，在仓库根目录执行：
 也提供标准 Android Studio / Gradle 工程：JDK 17、Android SDK 35、Gradle 8.9，执行 `gradlew.bat :app:assembleDebug`。该 Gradle 路径尚未执行验证，本次交付包来自已验证的 `build.ps1`。
 
 `build.ps1` 首次运行会在本地生成学习用签名密钥 `myhook-debug.jks`，密码 `android`，别名 `myhook`。该文件已被 Git 忽略，请自行保留以继续签名安装更新。不同电脑新生成的密钥及 Gradle 默认 debug 密钥均可能不同，不能直接覆盖安装另一密钥签名的旧 MyHook。
+
+## GitHub Actions 发布
+
+配置四个签名 Secrets 后，推送与 `app/build.gradle.kts` 中 `versionName` 一致的 tag（例如 `v0.2.0`），工作流会构建、运行策略测试、校验签名并发布 GitHub Release，附件包含 APK 和 SHA-256 文件。版本号统一从 Gradle 配置读取。
+
+发布使用现有证书导出的独立密钥库和随机密码，签名指纹与之前本地安装包保持一致；不会在 CI 缺少密钥时自动生成新证书。配置与后续发版步骤见 [GitHub Actions 发布说明](docs/发布说明.md)。
 
 ## 验证与排查
 
